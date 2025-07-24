@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OFU Mining - GameFi Penambangan dengan Token OFU</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Font & Variables */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Exo+2:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400&display=swap');
+        
+        :root {
+            --primary: #0a0e29;
+            --secondary: #1a1f4b;
+            --accent: #6c42f5;
+            --accent-light: #8d6cff;
+            --highlight: #00e6cc;
+            --text: #ffffff;
+            --text-secondary: #b8c2cc;
+            --warning: #ffcc00;
+            --success: #00d395;
+            --ufo-green: #00ff9d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background: var(--primary);
+            color: var(--text);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(28, 35, 80, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(108, 66, 245, 0.15) 0%, transparent 20%),
+                linear-gradient(to bottom, #050817, #0a0e29);
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 32px;
+            background: linear-gradient(135deg, var(--ufo-green), var(--highlight));
+            color: #0a0e29;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(0, 255, 157, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .btn:hover:before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 255, 157, 0.6);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--ufo-green);
+            color: var(--ufo-green);
+            box-shadow: 0 4px 15px rgba(0, 255, 157, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 255, 157, 0.1);
+        }
+        
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            display: inline-block;
+            background: linear-gradient(90deg, var(--ufo-green), var(--highlight));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ufo-green), var(--highlight));
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.4s ease;
+        }
+        
+        header.scrolled {
+            background: rgba(10, 14, 41, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--ufo-green), var(--highlight));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin: 0 15px;
+        }
+        
+        .nav-menu a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-menu a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--ufo-green);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-menu a:hover:after {
+            width: 100%;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 650px;
+        }
+        
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        
+        .hero-content h1 span {
+            background: linear-gradient(90deg, var(--ufo-green), var(--highlight));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .hero-image {
+            position: absolute;
+            right: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60%;
+            max-width: 800px;
+            z-index: 5;
+            text-align: center;
+        }
+        
+        /* UFO Styling */
+        .ufo-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .main-ufo {
+            width: 400px;
+            height: 200px;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .ufo-body {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            background: radial-gradient(circle at center, #00ff9d, #00b36b);
+            border-radius: 50%;
+            top: 50px;
+            box-shadow: 0 0 40px rgba(0, 255, 157, 0.7);
+        }
+        
+        .ufo-dome {
+            position: absolute;
+            width: 60%;
+            height: 70px;
+            background: radial-gradient(circle at center, rgba(0, 230, 204, 0.8), rgba(0, 179, 107, 0.5));
+            border-radius: 50%;
+            top: 15px;
+            left: 20%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .ufo-light {
+            position: absolute;
+            width: 120%;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+            bottom: -15px;
+            left: -10%;
+            filter: blur(5px);
+            animation: pulse 2s infinite alternate;
+        }
+        
+        .ufo-light-beam {
+            position: absolute;
+            width: 80%;
+            height: 300px;
+            background: linear-gradient(to bottom, rgba(0, 255, 157, 0.3), transparent);
+            border-radius: 50%;
+            bottom: -300px;
+            left: 10%;
+            filter: blur(20px);
+            animation: beam 3s infinite alternate;
+        }
+        
+        .small-ufo {
+            position: absolute;
+            width: 100px;
+            height: 50px;
+            animation: float 8s infinite ease-in-out;
+        }
+        
+        .small-ufo:nth-child(1) {
+            top: 20px;
+            left: 50px;
+            animation-delay: 0s;
+        }
+        
+        .small-ufo:nth-child(2) {
+            top: 150px;
+            right: 100px;
+            animation-delay: -2s;
+        }
+        
+        .small-ufo:nth-child(3) {
+            bottom: 50px;
+            left: 150px;
+            animation-delay: -4s;
+        }
+        
+        .ufo-element {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.2;
+        }
+        
+        .ufo-1 {
+            top: 10%;
+            left: 5%;
+            width: 120px;
+            height: 60px;
+            background: var(--ufo-green);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+        
+        .ufo-2 {
+            top: 30%;
+            right: 15%;
+            width: 80px;
+            height: 40px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            filter: blur(8px);
+        }
+        
+        .ufo-3 {
+            bottom: 20%;
+            left: 20%;
+            width: 100px;
+            height: 50px;
+            background: var(--highlight);
+            border-radius: 50%;
+            filter: blur(12px);
+        }
+        
+        /* About Section */
+        #about {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .about-text h3 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: var(--ufo-green);
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .about-features {
+            margin-top: 30px;
+        }
+        
+        .feature {
+            display: flex;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+        
+        .feature-icon {
+            min-width: 60px;
+            height: 60px;
+            background: rgba(0, 255, 157, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+        }
+        
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: var(--ufo-green);
+        }
+        
+        .feature-text h4 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        
+        .feature-text p {
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+        
+        .about-image {
+            position: relative;
+            text-align: center;
+        }
+        
+        .mining-illustration {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+        
+        .asteroid {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #8d6cff, #6c42f5);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(108, 66, 245, 0.5);
+        }
+        
+        .asteroid:nth-child(1) {
+            top: 50px;
+            left: 50px;
+            animation: rotate 20s infinite linear;
+        }
+        
+        .asteroid:nth-child(2) {
+            top: 200px;
+            right: 100px;
+            width: 80px;
+            height: 80px;
+            animation: rotate 15s infinite linear reverse;
+        }
+        
+        .asteroid:nth-child(3) {
+            bottom: 80px;
+            left: 150px;
+            width: 120px;
+            height: 120px;
+            animation: rotate 25s infinite linear;
+        }
+        
+        .mining-ufo {
+            position: absolute;
+            width: 150px;
+            height: 75px;
+            top: 150px;
+            left: 40%;
+            animation: mining-move 8s infinite ease-in-out;
+        }
+        
+        .mining-beam {
+            position: absolute;
+            width: 20px;
+            height: 100px;
+            background: linear-gradient(to bottom, var(--ufo-green), transparent);
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: blur(5px);
+            animation: mining-beam 2s infinite alternate;
+        }
+        
+        /* Mining Projects Section */
+        #mining-projects {
+            background: rgba(10, 20, 30, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .project-card {
+            background: rgba(26, 31, 75, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 255, 157, 0.3);
+            border-color: var(--ufo-green);
+        }
+        
+        .project-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(0, 255, 157, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--ufo-green);
+        }
+        
+        .project-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--ufo-green);
+        }
+        
+        .project-card p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .project-reward {
+            display: inline-block;
+            padding: 8px 15px;
+            background: rgba(0, 255, 157, 0.2);
+            border-radius: 30px;
+            color: var(--ufo-green);
+            font-weight: 700;
+        }
+        
+        .project-ufo {
+            position: absolute;
+            width: 60px;
+            height: 30px;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover .project-ufo {
+            opacity: 0.7;
+            transform: translateY(-5px);
+        }
+        
+        /* Referral Section */
+        #referral {
+            background: linear-gradient(135deg, rgba(10, 20, 40, 0.9), rgba(15, 30, 60, 0.9));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .referral-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .referral-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .referral-content h3 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: var(--ufo-green);
+        }
+        
+        .referral-content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .referral-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .referral-stat {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .referral-stat h4 {
+            font-size: 2.5rem;
+            color: var(--ufo-green);
+            margin-bottom: 10px;
+        }
+        
+        .referral-stat p {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .referral-form {
+            background: rgba(26, 31, 75, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+        
+        .referral-form h4 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--ufo-green);
+            text-align: center;
+        }
+        
+        .referral-input-group {
+            margin-bottom: 20px;
+        }
+        
+        .referral-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .referral-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(10, 15, 30, 0.8);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .referral-input:focus {
+            outline: none;
+            border-color: var(--ufo-green);
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+        }
+        
+        .referral-code {
+            display: flex;
+            align-items: center;
+            background: rgba(10, 15, 30, 0.8);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            border-radius: 8px;
+            padding: 5px;
+            margin-top: 10px;
+        }
+        
+        .referral-code input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px 15px;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .referral-code button {
+            background: var(--ufo-green);
+            color: var(--primary);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .referral-code button:hover {
+            background: var(--highlight);
+            transform: translateY(-2px);
+        }
+        
+        .referral-ufo {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            top: -20px;
+            right: 50px;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        /* Tokenomics */
+        #tokenomics {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%231a1f4b" opacity="0.2"/></svg>');
+            background-size: 100px;
+        }
+        
+        .token-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .token-info {
+            max-width: 500px;
+        }
+        
+        .token-info h3 {
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            color: var(--ufo-green);
+        }
+        
+        .token-info p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+        
+        .token-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .token-stat {
+            background: rgba(26, 31, 75, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(0, 255, 157, 0.3);
+        }
+        
+        .token-stat h4 {
+            font-size: 2.5rem;
+            color: var(--ufo-green);
+            margin-bottom: 10px;
+        }
+        
+        .token-stat p {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .token-chart {
+            position: relative;
+            text-align: center;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 25, 0.95);
+            padding: 70px 0 30px;
+            position: relative;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-logo {
+            max-width: 250px;
+        }
+        
+        .footer-logo .logo-text {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .footer-logo p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--ufo-green);
+            border-radius: 50%;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--ufo-green);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-links h4 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: var(--ufo-green);
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--ufo-green);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+        
+        @keyframes beam {
+            0% { height: 200px; opacity: 0.2; }
+            100% { height: 300px; opacity: 0.4; }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes mining-move {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(20px) translateY(-15px); }
+            50% { transform: translateX(-10px) translateY(10px); }
+            75% { transform: translateX(15px) translateY(-5px); }
+        }
+        
+        @keyframes mining-beam {
+            0% { height: 80px; opacity: 0.3; }
+            100% { height: 120px; opacity: 0.6; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+            
+            .about-content,
+            .token-container,
+            .referral-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .feature {
+                justify-content: center;
+            }
+            
+            .hero-image {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                margin-top: 40px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .referral-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .main-ufo {
+                width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- UFO Background Elements -->
+    <div class="ufo-element ufo-1"></div>
+    <div class="ufo-element ufo-2"></div>
+    <div class="ufo-element ufo-3"></div>
+    
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">OFU Mining</div>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#mining-projects">Proyek Penambangan</a></li>
+                <li><a href="#referral">Referral</a></li>
+                <li><a href="#tokenomics">Token OFU</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="#" class="btn" id="connect-btn">Connect Wallet</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>TAMBANG ASTEROID<br><span>DAPATKAN TOKEN OFU</span></h1>
+                <p>OFU Mining adalah pengalaman GameFi revolusioner di mana Anda menjelajahi kosmos, menambang asteroid, dan mengumpulkan token OFU yang berharga. Dapatkan NFT unik dan hasilkan pendapatan pasif melalui sistem referral kami yang menguntungkan!</p>
+                <div class="hero-buttons">
+                    <a href="#mining-projects" class="btn">Mulai Menambang Sekarang</a>
+                    <a href="#referral" class="btn btn-secondary">Dapatkan Bonus Referral</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="ufo-container">
+                <div class="main-ufo">
+                    <div class="ufo-body"></div>
+                    <div class="ufo-dome"></div>
+                    <div class="ufo-light"></div>
+                    <div class="ufo-light-beam"></div>
+                </div>
+                <div class="small-ufo">
+                    <svg viewBox="0 0 100 50">
+                        <ellipse cx="50" cy="25" rx="40" ry="15" fill="#00ff9d" />
+                        <ellipse cx="50" cy="15" rx="20" ry="10" fill="#00e6cc" opacity="0.7" />
+                        <circle cx="50" cy="40" r="5" fill="#ffffff" filter="url(#glow)" />
+                    </svg>
+                </div>
+                <div class="small-ufo">
+                    <svg viewBox="0 0 100 50">
+                        <ellipse cx="50" cy="25" rx="40" ry="15" fill="#8d6cff" />
+                        <ellipse cx="50" cy="15" rx="20" ry="10" fill="#6c42f5" opacity="0.7" />
+                        <circle cx="50" cy="40" r="5" fill="#ffffff" filter="url(#glow)" />
+                    </svg>
+                </div>
+                <div class="small-ufo">
+                    <svg viewBox="0 0 100 50">
+                        <ellipse cx="50" cy="25" rx="40" ry="15" fill="#00e6cc" />
+                        <ellipse cx="50" cy="15" rx="20" ry="10" fill="#00b36b" opacity="0.7" />
+                        <circle cx="50" cy="40" r="5" fill="#ffffff" filter="url(#glow)" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mining Projects Section -->
+    <section id="mining-projects">
+        <div class="container">
+            <div class="section-title">
+                <h2>Proyek Penambangan Mudah</h2>
+                <p>Mulai hasilkan token OFU dengan memilih proyek penambangan yang sesuai dengan gaya bermain Anda</p>
+            </div>
+            <div class="projects-container">
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Penambang Pemula</h3>
+                    <p>Ideal untuk pemula. Mulai dengan pesawat UFO dasar dan tambang asteroid kecil untuk mendapatkan token OFU.</p>
+                    <div class="project-reward">10-50 OFU/hari</div>
+                    <div class="project-ufo">
+                        <svg viewBox="0 0 100 50">
+                            <ellipse cx="50" cy="25" rx="40" ry="15" fill="#00ff9d" />
+                            <ellipse cx="50" cy="15" rx="20" ry="10" fill="#00e6cc" opacity="0.7" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <h3>Penambang Ahli</h3>
+                    <p>Untuk penambang berpengalaman. Gunakan peralatan canggih untuk menambang asteroid langka dengan hasil OFU lebih besar.</p>
+                    <div class="project-reward">50-200 OFU/hari</div>
+                    <div class="project-ufo">
+                        <svg viewBox="0 0 100 50">
+                            <ellipse cx="50" cy="25" rx="40" ry="15" fill="#8d6cff" />
+                            <ellipse cx="50" cy="15" rx="20" ry="10" fill="#6c42f5" opacity="0.7" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <h3>Penambang Elit</h3>
+                    <p>Eksklusif untuk penambang top. Akses ke asteroid kaya mineral dengan potensi hadiah OFU dan NFT langka.</p>
+                    <div class="project-reward">200-1000 OFU/hari</div>
+                    <div class="project-ufo">
+                        <svg viewBox="0 0 100 50">
+                            <ellipse cx="50" cy="25" rx="40" ry="15" fill="#ffcc00" />
+                            <ellipse cx="50" cy="15" rx="20" ry="10" fill="#ff9900" opacity="0.7" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tentang OFU Mining</h2>
+                <p>Platform penambangan GameFi pertama yang menggabungkan eksplorasi luar angkasa dengan ekonomi token</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Penambangan Kosmik Masa Depan</h3>
+                    <p>OFU Mining adalah platform revolusioner yang memungkinkan Anda menjelajahi galaksi, menambang asteroid, dan mengumpulkan token OFU yang berharga. Dengan teknologi canggih dan armada UFO khusus, Anda dapat mengubah petualangan luar angkasa menjadi sumber pendapatan nyata.</p>
+                    
+                    <div class="about-features">
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-ufo"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Armada UFO Canggih</h4>
+                                <p>Pilih dari berbagai jenis UFO dengan kemampuan penambangan yang berbeda-beda</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Asteroid Kaya Mineral</h4>
+                                <p>Temukan asteroid langka yang mengandung token OFU dan NFT berharga</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Komunitas Kosmik</h4>
+                                <p>Bergabung dengan komunitas penambang luar angkasa terbesar di galaksi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="mining-illustration">
+                        <div class="asteroid"></div>
+                        <div class="asteroid"></div>
+                        <div class="asteroid"></div>
+                        <div class="mining-ufo">
+                            <svg viewBox="0 0 150 75">
+                                <ellipse cx="75" cy="30" rx="70" ry="25" fill="#00ff9d" />
+                                <ellipse cx="75" cy="15" rx="40" ry="15" fill="#00e6cc" opacity="0.7" />
+                                <rect x="70" y="55" width="10" height="80" fill="#00ff9d" opacity="0.5" filter="blur(5px)" />
+                            </svg>
+                            <div class="mining-beam"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Referral Section -->
+    <section id="referral">
+        <div class="container">
+            <div class="section-title">
+                <h2>Program Referral</h2>
+                <p>Dapatkan bonus tambahan dengan mengajak teman bergabung dalam misi penambangan kosmik</p>
+            </div>
+            <div class="referral-container">
+                <div class="referral-content">
+                    <h3>Hasilkan Lebih Banyak OFU Dengan Referral</h3>
+                    <p>Program referral kami dirancang untuk memberi Anda penghargaan atas setiap teman yang Anda ajak bergabung dalam petualangan penambangan kosmik.</p>
+                    <p>Untuk setiap teman yang mendaftar menggunakan kode referral Anda, Anda akan mendapatkan:</p>
+                    
+                    <div class="referral-stats">
+                        <div class="referral-stat">
+                            <h4>10%</h4>
+                            <p>Dari hasil tambang pertama mereka</p>
+                        </div>
+                        <div class="referral-stat">
+                            <h4>5%</h4>
+                            <p>Dari semua hasil tambang mereka selamanya</p>
+                        </div>
+                        <div class="referral-stat">
+                            <h4>100 OFU</h4>
+                            <p>Bonus saat mereka melakukan deposit pertama</p>
+                        </div>
+                    </div>
+                    
+                    <p>Semakin banyak teman yang Anda ajak, semakin banyak OFU yang bisa Anda hasilkan!</p>
+                </div>
+                
+                <div class="referral-form">
+                    <div class="referral-ufo">
+                        <svg viewBox="0 0 100 50">
+                            <ellipse cx="50" cy="25" rx="40" ry="15" fill="#00ff9d" />
+                            <ellipse cx="50" cy="15" rx="20" ry="10" fill="#00e6cc" opacity="0.7" />
+                        </svg>
+                    </div>
+                    <h4>Kode Referral Anda</h4>
+                    <div class="referral-input-group">
+                        <label>Bagikan kode ini dengan teman Anda:</label>
+                        <div class="referral-code">
+                            <input type="text" id="referral-code" value="OFU-789X-2024" readonly>
+                            <button id="copy-btn">Salin</button>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-input-group">
+                        <label>Atau gunakan link referral:</label>
+                        <input type="text" class="referral-input" value="https://ofu-mining.com/ref/OFU-789X-2024" readonly>
+                    </div>
+                    
+                    <div class="referral-input-group">
+                        <label>Statistik Referral Anda:</label>
+                        <div style="display: flex; gap: 15px; margin-top: 15px;">
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 2rem; color: var(--ufo-green);">12</div>
+                                <div>Orang Diundang</div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 2rem; color: var(--ufo-green);">1,250</div>
+                                <div>OFU Diperoleh</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tokenomics Section -->
+    <section id="tokenomics">
+        <div class="container">
+            <div class="section-title">
+                <h2>Tokenomics OFU</h2>
+                <p>Ekonomi token OFU yang berkelanjutan untuk mendukung ekosistem game jangka panjang</p>
+            </div>
+            <div class="token-container">
+                <div class="token-info">
+                    <h3>$OFU Token Economy</h3>
+                    <p>Token OFU (Offworld Fungible Unit) adalah mata uang utama dalam ekosistem penambangan kosmik. Token ini didesain untuk memberikan nilai nyata kepada pemain dan investor.</p>
+                    <p>Dengan OFU, Anda dapat:</p>
+                    <ul style="padding-left: 20px; margin-bottom: 20px; color: var(--text-secondary);">
+                        <li>Meningkatkan peralatan penambangan Anda</li>
+                        <li>Membeli NFT langka di pasar</li>
+                        <li>Staking untuk mendapatkan reward tambahan</li>
+                        <li>Berpartisipasi dalam governance ekosistem</li>
+                    </ul>
+                    
+                    <div class="token-stats">
+                        <div class="token-stat">
+                            <h4>1M</h4>
+                            <p>Total Supply</p>
+                        </div>
+                        <div class="token-stat">
+                            <h4>60%</h4>
+                            <p>Mining Rewards</p>
+                        </div>
+                        <div class="token-stat">
+                            <h4>15%</h4>
+                            <p>Ecosystem Fund</p>
+                        </div>
+                        <div class="token-stat">
+                            <h4>10%</h4>
+                            <p>Team & Advisors</p>
+                        </div>
+                        <div class="token-stat">
+                            <h4>10%</h4>
+                            <p>Liquidity</p>
+                        </div>
+                        <div class="token-stat">
+                            <h4>5%</h4>
+                            <p>Referral Rewards</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="token-chart">
+                    <div class="chart-container">
+                        <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="200" cy="200" r="150" fill="transparent" stroke="#0a0e29" stroke-width="50" />
+                            <circle cx="200" cy="200" r="150" fill="transparent" stroke="#00ff9d" stroke-width="50" stroke-dasharray="282.6 706.5" stroke-dashoffset="0" transform="rotate(-90 200 200)" />
+                            <circle cx="200" cy="200" r="150" fill="transparent" stroke="#00e6cc" stroke-width="50" stroke-dasharray="94.2 894.9" stroke-dashoffset="-282.6" transform="rotate(-90 200 200)" />
+                            <circle cx="200" cy="200" r="150" fill="transparent" stroke="#8d6cff" stroke-width="50" stroke-dasharray="94.2 894.9" stroke-dashoffset="-376.8" transform="rotate(-90 200 200)" />
+                            <circle cx="200" cy="200" r="150" fill="transparent" stroke="#6c42f5" stroke-width="50" stroke-dasharray="47.1 941.4" stroke-dashoffset="-471" transform="rotate(-90 200 200)" />
+                            <circle cx="200" cy="200" r="150" fill="transparent" stroke="#ffcc00" stroke-width="50" stroke-dasharray="47.1 941.4" stroke-dashoffset="-518.1" transform="rotate(-90 200 200)" />
+                        </svg>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <div style="display: inline-block; margin: 0 10px;"><div style="display: inline-block; width: 15px; height: 15px; background: #00ff9d; vertical-align: middle; margin-right: 5px;"></div> Mining Rewards</div>
+                        <div style="display: inline-block; margin: 0 10px;"><div style="display: inline-block; width: 15px; height: 15px; background: #00e6cc; vertical-align: middle; margin-right: 5px;"></div> Ecosystem Fund</div>
+                        <div style="display: inline-block; margin: 0 10px;"><div style="display: inline-block; width: 15px; height: 15px; background: #8d6cff; vertical-align: middle; margin-right: 5px;"></div> Team & Advisors</div>
+                        <div style="display: inline-block; margin: 0 10px;"><div style="display: inline-block; width: 15px; height: 15px; background: #6c42f5; vertical-align: middle; margin-right: 5px;"></div> Liquidity</div>
+                        <div style="display: inline-block; margin: 0 10px;"><div style="display: inline-block; width: 15px; height: 15px; background: #ffcc00; vertical-align: middle; margin-right: 5px;"></div> Referral Rewards</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">OFU Mining</span>
+                    <p>Tambang asteroid, kumpulkan token OFU, dan nikmati pengalaman GameFi luar angkasa yang tak terlupakan.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-medium"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Tautan Cepat</h4>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#mining-projects">Proyek Penambangan</a></li>
+                        <li><a href="#referral">Program Referral</a></li>
+                        <li><a href="#tokenomics">Token OFU</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Sumber Daya</h4>
+                    <ul>
+                        <li><a href="#">Whitepaper</a></li>
+                        <li><a href="#">Dokumentasi</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Dukungan</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><a href="#">Syarat & Ketentuan</a></li>
+                        <li><a href="#">Kebijakan Cookie</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 OFU Mining. Hak cipta dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Copy referral code
+        document.getElementById('copy-btn').addEventListener('click', function() {
+            const code = document.getElementById('referral-code');
+            code.select();
+            document.execCommand('copy');
+            
+            // Show notification
+            const notif = document.createElement('div');
+            notif.textContent = 'Kode referral berhasil disalin!';
+            notif.style.position = 'fixed';
+            notif.style.top = '20px';
+            notif.style.right = '20px';
+            notif.style.backgroundColor = '#00ff9d';
+            notif.style.color = '#0a0e29';
+            notif.style.padding = '10px 20px';
+            notif.style.borderRadius = '5px';
+            notif.style.fontFamily = 'Orbitron, sans-serif';
+            notif.style.zIndex = '1000';
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                document.body.removeChild(notif);
+            }, 3000);
+        });
+
+        // Connect wallet button
+        document.getElementById('connect-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            this.textContent = "Wallet Terhubung";
+            this.style.background = "linear-gradient(135deg, #00e6cc, #00ff9d)";
+            
+            // Show notification
+            const notif = document.createElement('div');
+            notif.textContent = 'Wallet berhasil terkoneksi!';
+            notif.style.position = 'fixed';
+            notif.style.top = '20px';
+            notif.style.right = '20px';
+            notif.style.backgroundColor = '#00ff9d';
+            notif.style.color = '#0a0e29';
+            notif.style.padding = '10px 20px';
+            notif.style.borderRadius = '5px';
+            notif.style.fontFamily = 'Orbitron, sans-serif';
+            notif.style.zIndex = '1000';
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                document.body.removeChild(notif);
+            }, 3000);
+        });
+
+        // Animate UFO elements
+        function animateUFOs() {
+            const ufos = document.querySelectorAll('.ufo-element');
+            let positions = [
+                { top: 10, left: 5 },
+                { top: 30, left: 15 },
+                { top: 20, left: 20 }
+            ];
+            
+            ufos.forEach((ufo, index) => {
+                let pos = positions[index];
+                let direction = 1;
+                
+                setInterval(() => {
+                    pos.top += direction * 0.2;
+                    if (pos.top > 15 || pos.top < 5) direction *= -1;
+                    ufo.style.top = pos.top + '%';
+                }, 100);
+            });
+        }
+
+        // Initialize when page loads
+        window.onload = function() {
+            animateUFOs();
+        };
+    </script>
+</body>
+</html>
